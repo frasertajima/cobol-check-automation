@@ -33,21 +33,36 @@ jobs:
           ZOWE_PORT: ${{ secrets.ZOWE_PORT }}
         run: |
           zowe config init --global-config
-
           zowe config set profiles.zosmf.properties.host $ZOWE_HOST --global-config
           zowe config set profiles.zosmf.properties.port $ZOWE_PORT --global-config
           zowe config set profiles.zosmf.properties.user $ZOWE_USERNAME --global-config
           zowe config set profiles.zosmf.properties.password $ZOWE_PASSWORD --global-config
           zowe config set profiles.zosmf.properties.rejectUnauthorized false --global-config
 
-      - name: Run COBOL Check
+      - name: Upload COBOL Check to Mainframe
         env:
           ZOWE_USERNAME: ${{ secrets.ZOWE_USERNAME }}
         run: |
           chmod +x .github/scripts/zowe_operations.sh
+          .github/scripts/zowe_operations.sh
+
+      - name: Run COBOL Check on Mainframe
+        env:
+          ZOWE_USERNAME: ${{ secrets.ZOWE_USERNAME }}
+        run: |
           chmod +x .github/scripts/mainframe_operations.sh
 
-          .github/scripts/zowe_operations.sh
-          .github/scripts/mainframe_operations.sh
+          # Upload the script to USS; mising from lab!!
+          zowe zos-files upload file-to-uss \
+            .github/scripts/mainframe_operations.sh \
+            "/z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh" \
+            --binary
+
+          # Make it executable on USS; missing!
+          zowe zos-files issue ssh "chmod +x /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh"
+
+          # Execute it on the mainframe; lab tries to execute it in github!!
+          zowe zos-files issue ssh "sh /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh"
+
 
 
