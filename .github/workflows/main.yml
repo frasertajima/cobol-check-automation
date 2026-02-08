@@ -74,20 +74,21 @@ jobs:
           sed -i 's/\r$//' .github/scripts/mainframe_operations.sh
           sed -i '1s/^\xEF\xBB\xBF//' .github/scripts/mainframe_operations.sh
       
-          # Upload script in TEXT mode (important!)
+          # Upload script in TEXT mode
           zowe zos-files upload file-to-uss \
             .github/scripts/mainframe_operations.sh \
             "/z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh"
       
-          # Make it executable
+          # Make it executable on USS
           zowe zos-ssh issue command \
             "chmod +x /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh" \
             --host $ZOWE_HOST --user $ZOWE_USERNAME --password $ZOWE_PASSWORD
       
-          # Execute it on z/OS
+          # Execute script on z/OS, passing username as argument
           zowe zos-ssh issue command \
-            "sh /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh" \
+            "sh /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh ${ZOWE_USERNAME}" \
             --host $ZOWE_HOST --user $ZOWE_USERNAME --password $ZOWE_PASSWORD
+
 
 
 
