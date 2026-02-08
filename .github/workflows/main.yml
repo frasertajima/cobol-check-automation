@@ -32,19 +32,25 @@ jobs:
 
       # Configure Zowe profile using GitHub Secrets; need HOST and PORT
       # and creation of profile on VM
-      - name: Configure Zowe Profile
+      - name: Configure Zowe Profile (Zowe v2)
         env:
           ZOWE_USERNAME: ${{ secrets.ZOWE_USERNAME }}
           ZOWE_PASSWORD: ${{ secrets.ZOWE_PASSWORD }}
           ZOWE_HOST: ${{ secrets.ZOWE_HOST }}
           ZOWE_PORT: ${{ secrets.ZOWE_PORT }}
         run: |
-          zowe profiles create zosmf-profile github \
-            --host $ZOWE_HOST \
-            --port $ZOWE_PORT \
-            --user $ZOWE_USERNAME \
-            --password $ZOWE_PASSWORD \
-            --reject-unauthorized false
+          # Initialize global config
+          zowe config init --global-config
+
+          # Set profile properties
+          zowe config set profiles.zosmf.properties.host $ZOWE_HOST --global-config
+          zowe config set profiles.zosmf.properties.port $ZOWE_PORT --global-config
+          zowe config set profiles.zosmf.properties.user $ZOWE_USERNAME --global-config
+          zowe config set profiles.zosmf.properties.rejectUnauthorized false --global-config
+
+          # Secure the password
+          zowe config secure profiles.zosmf.properties.password $ZOWE_PASSWORD --global-config
+
 
       # Run your Zowe + COBOL Check scripts
       - name: Run COBOL Check
