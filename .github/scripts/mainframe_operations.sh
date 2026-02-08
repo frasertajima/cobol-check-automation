@@ -9,7 +9,7 @@ if [ -z "$ZOWE_USERNAME" ]; then
 fi
 
 # Base directory on USS
-BASE_DIR="/z/${ZOWE_USERNAME}/cobolcheck"
+BASE_DIR="/Z/${ZOWE_USERNAME}/cobolcheck"
 BIN_DIR="${BASE_DIR}/bin"
 SCRIPT_DIR="${BASE_DIR}/scripts"
 
@@ -50,6 +50,9 @@ run_cobolcheck() {
 for program in NUMBERS EMPPAY DEPTPAY; do
   run_cobolcheck "$program"
 done
+
+echo "Mainframe operations completed"
+
 
 echo "Mainframe operations completed"
 
