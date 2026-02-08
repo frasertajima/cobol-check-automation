@@ -46,10 +46,8 @@ jobs:
           zowe config set profiles.zosmf.properties.host $ZOWE_HOST --global-config
           zowe config set profiles.zosmf.properties.port $ZOWE_PORT --global-config
           zowe config set profiles.zosmf.properties.user $ZOWE_USERNAME --global-config
+          zowe config set profiles.zosmf.properties.password $ZOWE_PASSWORD --global-config
           zowe config set profiles.zosmf.properties.rejectUnauthorized false --global-config
-
-          # Secure the password
-          zowe config secure profiles.zosmf.properties.password $ZOWE_PASSWORD --global-config
 
 
       # Run your Zowe + COBOL Check scripts
