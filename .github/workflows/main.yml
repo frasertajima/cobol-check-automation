@@ -9,19 +9,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repository
       - uses: actions/checkout@v2
+
+      # Install Java
       - name: Set up Java
         uses: actions/setup-java@v2
-        with: 
-          distribution: 'temurin' 
+        with:
+          distribution: 'temurin'
           java-version: '17'
-      - name: Run COBOL Check
+
+      # Install Node (required for Zowe CLI)
+      # LAB fails to set this up!!
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Install Zowe CLI; lab fails to set up
+      - name: Install Zowe CLI
+        run: npm install -g @zowe/cli
+
+      # Configure Zowe profile using GitHub Secrets; need HOST and PORT
+      # and creation of profile on VM
+      - name: Configure Zowe Profile
         env:
-          ZOWE_USERNAME : ${{ secrets.ZOWE_USERNAME }}
-          ZOWE_PASSWORD : ${{ secrets.ZOWE_PASSWORD }}
+          ZOWE_USERNAME: ${{ secrets.ZOWE_USERNAME }}
+          ZOWE_PASSWORD: ${{ secrets.ZOWE_PASSWORD }}
+          ZOWE_HOST: ${{ secrets.ZOWE_HOST }}
+          ZOWE_PORT: ${{ secrets.ZOWE_PORT }}
+        run: |
+          zowe profiles create zosmf-profile github \
+            --host $ZOWE_HOST \
+            --port $ZOWE_PORT \
+            --user $ZOWE_USERNAME \
+            --password $ZOWE_PASSWORD \
+            --reject-unauthorized false
+
+      # Run your Zowe + COBOL Check scripts
+      - name: Run COBOL Check
         run: |
           chmod +x .github/scripts/zowe_operations.sh
           .github/scripts/zowe_operations.sh
+
           echo "Running COBOL Check"
           chmod +x .github/scripts/mainframe_operations.sh
           .github/scripts/mainframe_operations.sh
+
