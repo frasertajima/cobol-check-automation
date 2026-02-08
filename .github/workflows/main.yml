@@ -50,19 +50,14 @@ jobs:
         env:
           ZOWE_USERNAME: ${{ secrets.ZOWE_USERNAME }}
         run: |
-          chmod +x .github/scripts/mainframe_operations.sh
+          # Make script executable on USS
+          zowe zos-uss issue ssh \
+            "chmod +x /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh"
+      
+          # Execute script on z/OS
+          zowe zos-uss issue ssh \
+            "sh /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh"
 
-          # Upload the script to USS; mising from lab!!
-          zowe zos-files upload file-to-uss \
-            .github/scripts/mainframe_operations.sh \
-            "/z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh" \
-            --binary
-
-          # Make it executable on USS; missing!
-          zowe zos-files issue ssh "chmod +x /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh"
-
-          # Execute it on the mainframe; lab tries to execute it in github!!
-          zowe zos-files issue ssh "sh /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh"
 
 
 
