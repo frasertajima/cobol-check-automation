@@ -17,13 +17,13 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
 
       - name: Install Zowe CLI
         run: npm install -g @zowe/cli
@@ -73,30 +73,18 @@ jobs:
           # Convert script to UNIX LF and remove BOM
           sed -i 's/\r$//' .github/scripts/mainframe_operations.sh
           sed -i '1s/^\xEF\xBB\xBF//' .github/scripts/mainframe_operations.sh
-      
+
           # Upload script in TEXT mode
           zowe zos-files upload file-to-uss \
             .github/scripts/mainframe_operations.sh \
             "/z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh"
-      
+
           # Make it executable on USS
           zowe zos-ssh issue command \
             "chmod +x /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh" \
             --host $ZOWE_HOST --user $ZOWE_USERNAME --password $ZOWE_PASSWORD
-      
-          # Execute script on z/OS, passing username as argument
+
+          # Execute script on z/OS, passing username as argument (lowercased for USS paths)
           zowe zos-ssh issue command \
-            "sh /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh ${ZOWE_USERNAME}" \
+            "sh /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh ${ZOWE_USERNAME,,}" \
             --host $ZOWE_HOST --user $ZOWE_USERNAME --password $ZOWE_PASSWORD
-
-
-
-
-
-
-
-
-
-
-
-

@@ -7,7 +7,7 @@ if [ -z "$ZOWE_USERNAME" ]; then
   exit 1
 fi
 
-BASE_DIR="/Z/${ZOWE_USERNAME}/cobolcheck"
+BASE_DIR="/z/${ZOWE_USERNAME}/cobolcheck"
 BIN_DIR="${BASE_DIR}/bin"
 SCRIPT_DIR="${BASE_DIR}/scripts"
 JAR="${BIN_DIR}/cobol-check-0.2.19.jar"
@@ -56,5 +56,3 @@ for program in NUMBERS EMPPAY DEPTPAY; do
 done
 
 echo "Mainframe operations completed"
-
-
