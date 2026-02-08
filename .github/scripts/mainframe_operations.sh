@@ -9,6 +9,7 @@ fi
 
 BASE_DIR="/z/${ZOWE_USERNAME}/cobolcheck"
 BIN_DIR="${BASE_DIR}/bin"
+SCRIPT_DIR="${BASE_DIR}/scripts"
 JAR="${BIN_DIR}/cobol-check-0.2.19.jar"
 
 # Ensure the JAR exists
@@ -17,8 +18,12 @@ if [ ! -f "$JAR" ]; then
   exit 1
 fi
 
-# Work from the base directory
-cd "$BASE_DIR" || { echo "ERROR: Cannot cd to $BASE_DIR"; exit 1; }
+# Ensure test runner script is executable
+cd "$SCRIPT_DIR" || { echo "ERROR: Cannot cd to $SCRIPT_DIR"; exit 1; }
+chmod +x linux_gnucobol_run_tests
+
+# Return to base directory
+cd "$BASE_DIR" || exit 1
 
 run_cobolcheck() {
   program="$1"
@@ -34,6 +39,15 @@ run_cobolcheck() {
       || echo "Failed to copy CC##99.CBL"
   else
     echo "testruns/CC##99.CBL not found for $program"
+  fi
+
+  # Copy generated JCL
+  if [ -f "${program}.JCL" ]; then
+    cp "${program}.JCL" "//'$ZOWE_USERNAME.JCL($program)'" \
+      && echo "Copied ${program}.JCL" \
+      || echo "Failed to copy ${program}.JCL"
+  else
+    echo "${program}.JCL not found"
   fi
 }
 
