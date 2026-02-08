@@ -67,14 +67,23 @@ jobs:
       - name: Run COBOL Check on Mainframe
         env:
           ZOWE_USERNAME: ${{ secrets.ZOWE_USERNAME }}
+          ZOWE_PASSWORD: ${{ secrets.ZOWE_PASSWORD }}
+          ZOWE_HOST: ${{ secrets.ZOWE_HOST }}
         run: |
           # Make script executable on USS
-          zowe zos-uss issue ssh \
-            "chmod +x /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh"
+          zowe zos-ssh issue command \
+            "chmod +x /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh" \
+            --host $ZOWE_HOST \
+            --user $ZOWE_USERNAME \
+            --password $ZOWE_PASSWORD
       
           # Execute script on z/OS
-          zowe zos-uss issue ssh \
-            "sh /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh"
+          zowe zos-ssh issue command \
+            "sh /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh" \
+            --host $ZOWE_HOST \
+            --user $ZOWE_USERNAME \
+            --password $ZOWE_PASSWORD
+
 
 
 
