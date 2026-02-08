@@ -55,12 +55,6 @@ jobs:
           chmod +x .github/scripts/zowe_operations.sh
           .github/scripts/zowe_operations.sh
 
-          # Upload mainframe_operations.sh to USS
-          zowe zos-files upload file-to-uss \
-            .github/scripts/mainframe_operations.sh \
-            "/z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh" \
-            --binary
-
       # -----------------------------
       # 4. Run COBOL Check on Mainframe
       # -----------------------------
