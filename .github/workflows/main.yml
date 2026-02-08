@@ -70,19 +70,25 @@ jobs:
           ZOWE_PASSWORD: ${{ secrets.ZOWE_PASSWORD }}
           ZOWE_HOST: ${{ secrets.ZOWE_HOST }}
         run: |
-          # Make script executable on USS
+          # Convert script to UNIX LF before upload
+          sed -i 's/\r$//' .github/scripts/mainframe_operations.sh
+      
+          # Upload script
+          zowe zos-files upload file-to-uss \
+            .github/scripts/mainframe_operations.sh \
+            "/z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh" \
+            --binary
+      
+          # Make it executable
           zowe zos-ssh issue command \
             "chmod +x /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh" \
-            --host $ZOWE_HOST \
-            --user $ZOWE_USERNAME \
-            --password $ZOWE_PASSWORD
+            --host $ZOWE_HOST --user $ZOWE_USERNAME --password $ZOWE_PASSWORD
       
-          # Execute script on z/OS
+          # Execute it on z/OS
           zowe zos-ssh issue command \
             "sh /z/${ZOWE_USERNAME,,}/cobolcheck/scripts/mainframe_operations.sh" \
-            --host $ZOWE_HOST \
-            --user $ZOWE_USERNAME \
-            --password $ZOWE_PASSWORD
+            --host $ZOWE_HOST --user $ZOWE_USERNAME --password $ZOWE_PASSWORD
+
 
 
 
