@@ -19,7 +19,8 @@ jobs:
         env:
           ZOWE_USERNAME : ${{ secrets.ZOWE_USERNAME }}
           ZOWE_PASSWORD : ${{ secrets.ZOWE_PASSWORD }}
-        run: 
-          # add comments to run cobolcheck
+        run: |
+          chmod +x .github/scripts/zowe_operations.sh
+          .github/scripts/zowe_operations.sh
           echo "Running COBOL Check"
           # add actual commands here
