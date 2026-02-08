@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Ensure username is available
 if [ -z "$ZOWE_USERNAME" ]; then
   echo "ERROR: ZOWE_USERNAME is not set"
   exit 1
@@ -19,10 +18,11 @@ else
   echo "Directory already exists."
 fi
 
-# Upload cobol-check distribution
+# Upload cobol-check distribution (binary-safe)
 echo "Uploading cobol-check distribution..."
-zowe zos-files upload dir-to-uss "./cobol-check-0.2.19" "$USS_DIR" --recursive
+zowe zos-files upload dir-to-uss "./cobol-check-0.2.19" "$USS_DIR" --recursive --binary
 
 echo "Verifying upload:"
 zowe zos-files list uss-files "$USS_DIR"
+
 
