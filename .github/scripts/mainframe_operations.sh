@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Username passed from GitHub Actions
 ZOWE_USERNAME="$1"
 
 if [ -z "$ZOWE_USERNAME" ]; then
@@ -7,19 +8,27 @@ if [ -z "$ZOWE_USERNAME" ]; then
   exit 1
 fi
 
+# Base directory on USS
+BASE_DIR="/z/${ZOWE_USERNAME}/cobolcheck"
+BIN_DIR="${BASE_DIR}/bin"
+SCRIPT_DIR="${BASE_DIR}/scripts"
 
-cd cobolcheck
+# Ensure cobolcheck binary is executable
+cd "$BIN_DIR" || { echo "ERROR: Cannot cd to $BIN_DIR"; exit 1; }
 chmod +x cobolcheck
 
-cd scripts
+# Ensure test runner script is executable
+cd "$SCRIPT_DIR" || { echo "ERROR: Cannot cd to $SCRIPT_DIR"; exit 1; }
 chmod +x linux_gnucobol_run_tests
-cd ..
+
+# Return to base directory for running cobolcheck
+cd "$BASE_DIR" || exit 1
 
 run_cobolcheck() {
-  program=$1
+  program="$1"
   echo "Running cobolcheck for $program"
 
-  ./cobolcheck -p "$program" || true
+  "$BIN_DIR/cobolcheck" -p "$program" || true
 
   if [ -f "CC##99.CBL" ]; then
     cp CC##99.CBL "//'$ZOWE_USERNAME.CBL($program)'" \
@@ -44,6 +53,3 @@ done
 
 echo "Mainframe operations completed"
 
-    run_cobolcheck $program
-done
-echo "Mainframe operations completed"
