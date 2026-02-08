@@ -1,9 +1,12 @@
-#!/bin/bash
+#!/bin/sh
+
+ZOWE_USERNAME="$1"
 
 if [ -z "$ZOWE_USERNAME" ]; then
   echo "ERROR: ZOWE_USERNAME is not set"
   exit 1
 fi
+
 
 cd cobolcheck
 chmod +x cobolcheck
