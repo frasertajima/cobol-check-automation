@@ -55,6 +55,16 @@ jobs:
           chmod +x .github/scripts/zowe_operations.sh
           .github/scripts/zowe_operations.sh
 
+          # Upload COBOL source files from repo root to USS src/main/cobol/
+          for cbl in *.CBL; do
+            if [ -f "$cbl" ]; then
+              zowe zos-files upload file-to-uss \
+                "$cbl" \
+                "/z/${ZOWE_USERNAME,,}/cobolcheck/src/main/cobol/$cbl"
+              echo "Uploaded $cbl to src/main/cobol/"
+            fi
+          done
+
           # Upload JCL files to USS
           for jcl in *.JCL; do
             if [ -f "$jcl" ]; then
