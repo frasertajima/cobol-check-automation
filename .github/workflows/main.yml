@@ -55,6 +55,16 @@ jobs:
           chmod +x .github/scripts/zowe_operations.sh
           .github/scripts/zowe_operations.sh
 
+          # Upload JCL files to USS
+          for jcl in *.JCL; do
+            if [ -f "$jcl" ]; then
+              zowe zos-files upload file-to-uss \
+                "$jcl" \
+                "/z/${ZOWE_USERNAME,,}/cobolcheck/$jcl"
+              echo "Uploaded $jcl to USS"
+            fi
+          done
+
       # -----------------------------
       # 4. Run COBOL Check on Mainframe
       # -----------------------------
