@@ -1,3 +1,3 @@
 # cobol-check-automation
 
-We added a workflow. Had an error in lab code! Fixed it.
+The lab seems to have lots of errors. Each step seemed to require a fix!
