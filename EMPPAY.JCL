@@ -4,7 +4,7 @@
 //* SPDX - License - Identifier : CC - BY -4.0
 //*******************************************************
 //COBRUN EXEC IGYWCL
-//COBOL.SYSIN DD DSN=&SYSUID..CBL(EMPPAY),DIS=SHR
+//COBOL.SYSIN DD DSN=&SYSUID..CBL(EMPPAY),DISP=SHR
 //LKED.SYSLMOD DD DSN=&SYSUID..LOAD(EMPPAY),DISP=SHR
 //IF RC = 0 THEN
 //RUN        EXEC PGM=EMPPAY
