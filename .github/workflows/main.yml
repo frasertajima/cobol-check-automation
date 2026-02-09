@@ -65,6 +65,22 @@ jobs:
             fi
           done
 
+          # Upload test suites from test/ to USS src/test/cobol/
+          if [ -d "test" ]; then
+            for dir in test/*/; do
+              program=$(basename "$dir")
+              for cut in "$dir"*.cut; do
+                if [ -f "$cut" ]; then
+                  cutfile=$(basename "$cut")
+                  zowe zos-files upload file-to-uss \
+                    "$cut" \
+                    "/z/${ZOWE_USERNAME,,}/cobolcheck/src/test/cobol/$program/$cutfile"
+                  echo "Uploaded $cutfile to src/test/cobol/$program/"
+                fi
+              done
+            done
+          fi
+
           # Upload JCL files to USS
           for jcl in *.JCL; do
             if [ -f "$jcl" ]; then
