@@ -14,5 +14,4 @@
 //CEEDUMP    DD DUMMY
 //SYSUDUMP   DD DUMMY
 //**********************************************************
-// ELSE
 // ENDIF
