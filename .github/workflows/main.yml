@@ -69,6 +69,8 @@ jobs:
           if [ -d "test" ]; then
             for dir in test/*/; do
               program=$(basename "$dir")
+              zowe zos-files create uss-directory \
+                "/z/${ZOWE_USERNAME,,}/cobolcheck/src/test/cobol/$program" || true
               for cut in "$dir"*.cut; do
                 if [ -f "$cut" ]; then
                   cutfile=$(basename "$cut")
